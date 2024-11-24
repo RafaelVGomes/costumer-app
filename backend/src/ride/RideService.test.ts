@@ -1,13 +1,11 @@
 import request from 'supertest';
-import app from '../index'; // Ajuste o caminho conforme o app principal
+import app from '../index'; // Certifique-se de que está importando o servidor corretamente
 
 describe('POST /ride/estimate', () => {
   it('should return a valid ride estimate', async () => {
     const response = await request(app).post('/ride/estimate').send({
-      origin: 'Point A',
-      destination: 'Point B',
-      distance: 10, // in km
-      time: 15, // in minutes
+      distance: 10, // km
+      time: 15, // minutos
     });
 
     expect(response.status).toBe(200);

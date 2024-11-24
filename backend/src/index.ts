@@ -1,5 +1,5 @@
 import express from 'express';
-import rideRouter from './ride/routes';
+import rideRouter from './ride/RideService';
 
 const app = express();
 
