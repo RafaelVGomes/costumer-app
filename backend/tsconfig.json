@@ -6,6 +6,10 @@
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
     "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": "./",
