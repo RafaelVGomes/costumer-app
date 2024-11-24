@@ -4,8 +4,9 @@
   "description": "Aplicação para transporte particular",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p backend/tsconfig.json",
-    "start": "ts-node backend/src/server.ts",
+    "clean": "rm -rf dist/",
+    "build": "yarn clean && tsc -p tsconfig.json",
+    "start": "yarn clean && ts-node backend/dist/server.js",
     "dev": "nodemon",
     "test": "jest",
     "test:unit": "jest --runInBand"
