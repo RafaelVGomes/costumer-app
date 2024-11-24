@@ -13,32 +13,12 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": "./",
-    "paths": {
-      "@config/*": [
-        "src/config/*"
-      ],
-      "@controllers/*": [
-        "src/controllers/*"
-      ],
-      "@services/*": [
-        "src/services/*"
-      ],
-      "@repositories/*": [
-        "src/repositories/*"
-      ],
-      "@routes/*": [
-        "src/routes/*"
-      ],
-      "@middlewares/*": [
-        "src/middlewares/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
-      "@tests/*": [
-        "src/tests/*"
-      ]
-    }
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
   },
   "include": [
     "src/**/*"

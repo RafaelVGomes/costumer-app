@@ -4,5 +4,11 @@
         "revealOn": "run",
         "revealWithFocus": "none",
         "clearOnRun": "none"
-    }
+    },
+    "terminal.integrated.automationProfile.osx": {
+        "args": [
+            "-l"
+        ],
+        "path": "/bin/bash"
+    },
 }
