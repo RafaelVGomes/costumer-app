@@ -1,4 +1,4 @@
-import routingClient from './googleMapsClient';
+import routingClient from './google-maps-client';
 
 // Tipagem para entrada
 interface RouteRequest {
