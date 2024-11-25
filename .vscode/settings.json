@@ -1,18 +1,7 @@
 {
     "testing.openTesting": "neverOpen",
-    "jest.outputConfig": {
-        "revealOn": "run",
-        "revealWithFocus": "none",
-        "clearOnRun": "none"
-    },
-    "terminal.integrated.automationProfile.osx": {
-        "args": [
-            "-l"
-        ],
-        "path": "/bin/bash"
-    },
     "cSpell.words": [
-        "Goog"
+        "Goog",
+        "googlemaps"
     ],
-    "jest.jestCommandLine": "yarn test",
 }

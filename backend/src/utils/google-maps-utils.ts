@@ -1,6 +1,6 @@
 import routingClient from './google-maps-client';
 
-// Tipagem para entrada
+// Define the RouteRequest and RouteResponse interfaces
 interface RouteRequest {
   origin: {
     location: {
@@ -20,16 +20,15 @@ interface RouteRequest {
   };
 }
 
-// Tipagem para a saída formatada
 interface RouteResponse {
-  duration: string;
-  distanceMeters: number;
-  polyline: string;
+  distance: number; // Distance in meters
+  duration: string; // Duration as a human-readable string
+  polyline: string; // Encoded polyline
 }
 
+// Fetches route details from Google Maps API
 export async function getRoute(request: RouteRequest): Promise<RouteResponse> {
   try {
-    // Faz a chamada para a API Routes
     const [response] = await routingClient.computeRoutes(request, {
       otherArgs: {
         headers: {
@@ -41,25 +40,19 @@ export async function getRoute(request: RouteRequest): Promise<RouteResponse> {
       },
     });
 
-    // Extrai os dados relevantes da resposta
     const route = response.routes?.[0];
 
     if (!route) {
-      throw new Error('Nenhuma rota encontrada.');
+      throw new Error('No route found.');
     }
 
-    const duration =
-      typeof route.duration === 'string'
-        ? route.duration
-        : `${route.duration?.seconds || 0} segundos`;
-
     return {
-      duration,
-      distanceMeters: route.distanceMeters || 0,
-      polyline: route.polyline?.encodedPolyline || '',
+      distance: route.distanceMeters || 0, // Ensure distance is present
+      duration: `${route.duration?.seconds || 0} segundos`, // Convert duration to string
+      polyline: route.polyline?.encodedPolyline || '', // Ensure polyline is present
     };
   } catch (error) {
-    console.error('Erro ao calcular a rota:', error);
-    throw new Error('Não foi possível calcular a rota.');
+    console.error('Error fetching route:', error);
+    throw new Error('Failed to fetch route.');
   }
 }
