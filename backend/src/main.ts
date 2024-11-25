@@ -1,8 +1,8 @@
 import express, { Express } from 'express';
 import dotenv from 'dotenv'
 
-import { routesConf } from './utils/routeUtils';
-import { routes } from './routes';
+import { routesConf } from './utils/route-utils';
+import { urlPatterns } from './routes';
 
 dotenv.config()
 
@@ -11,7 +11,7 @@ const app: Express = express();
 
 // App configs
 app.use(express.json());
-routesConf(app, routes); // Routes registerer util
+routesConf(app, urlPatterns); // Routes registerer util
 
 // Setting server
 const PORT = process.env.PORT || 3001;
