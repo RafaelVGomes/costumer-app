@@ -1,6 +1,3 @@
-// import { pathsToModuleNameMapper } from 'ts-jest';
-// import { compilerOptions } from './tsconfig.json';
-
 export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -8,4 +5,6 @@ export default {
     '^.+\\.ts$': 'ts-jest',
   },
   transformIgnorePatterns: ['/node_modules/'],
+  roots: ['<rootDir>/src'],
+  testMatch: ['**/?(*-)+(spec|test|tests).[tj]s?(x)']
 };
