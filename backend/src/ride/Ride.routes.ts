@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import estimateRouter from './RideService';
+import { calculateEstimate } from './Ride.controller';
 
-const router: Router = Router();
+const rideRouter: Router = Router();
 
-router.use('/estimate', estimateRouter); // Register estimated route
+rideRouter.post('/estimate', calculateEstimate); // Register estimated route
 
-export default router;
+export default rideRouter;

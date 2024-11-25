@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../index'; // Certifique-se de que está importando o servidor corretamente
+import { app } from '../main';
 
 describe('POST /ride/estimate', () => {
   it('should return a valid ride estimate', async () => {
