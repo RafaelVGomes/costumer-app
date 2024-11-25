@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "build": "yarn clean && tsc -p tsconfig.json",
-    "start": "yarn clean && ts-node backend/dist/server.js",
+    "start": "yarn build && ts-node dist/main.js",
     "dev": "nodemon",
     "test": "jest",
     "test:unit": "jest --runInBand"
