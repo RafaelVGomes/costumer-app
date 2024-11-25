@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { calculateRideEstimate } from './Ride.service';
+import { calculateRideEstimate } from './ride-service';
 
 export const calculateEstimate = (req: Request, res: Response): void => {
   const { startLocation, endLocation } = req.body;

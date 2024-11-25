@@ -11,7 +11,7 @@ const app: Express = express();
 
 // App configs
 app.use(express.json());
-routesConf(app, routes); // Routes register middleware
+routesConf(app, routes); // Routes registerer util
 
 // Setting server
 const PORT = process.env.PORT || 3001;
