@@ -16,29 +16,17 @@ const config: Knex.Config = {
 const db: Knex = knex(config);
 
 async function initializeDatabase(): Promise<void> {
-  if (!fs.existsSync(databasePath)) {
-    console.log('Banco de dados não encontrado. Criando arquivo...');
-    fs.writeFileSync(databasePath, '');
-  }
-
-  console.log('Verificando tabelas...');
-  const hasTables = await db.schema.hasTable('rides');
-
-  if (!hasTables) {
-    console.log('Tabelas não encontradas. Aplicando migrations...');
-    applyMigrations();
-  } else {
-    console.log('Banco de dados já configurado.');
-  }
-}
-
-function applyMigrations(): void {
   try {
-    const output = execSync('npx knex migrate:latest', { encoding: 'utf-8' });
-    console.log(`Migrations aplicadas:\n${output}`);
+    if (!fs.existsSync(databasePath)) {
+      console.log('Banco de dados não encontrado. Criando arquivo...');
+      fs.writeFileSync(databasePath, '');
+
+      console.log('Criando tabelas...');
+      execSync('npx knex migrate:up drivers.ts', { encoding: 'utf-8', });
+      execSync('npx knex migrate:up rides.ts', { encoding: 'utf-8' });
+    }
   } catch (error) {
-    console.error('Erro ao aplicar migrations:', error);
-    process.exit(1);
+    console.log('BD Error:', error);
   }
 }
 
