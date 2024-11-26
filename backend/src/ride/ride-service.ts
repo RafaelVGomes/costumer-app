@@ -1,4 +1,5 @@
 import { getRoute } from '../utils/google-maps-utils';
+import { db } from '../database';
 import logger from '../utils/logger';
 
 /**
@@ -39,5 +40,34 @@ export const calculateRideEstimate = async (
   } catch (error) {
     logger.error('Error while fetching route from Google Maps API', { error });
     throw new Error('Failed to fetch route from Google Maps API.');
+  }
+};
+
+export const confirmRideService = async (
+  customerId: string,
+  driverId: string,
+  distance: number
+): Promise<{
+  id: string;
+  customerId: string;
+  driverId: string;
+  distance: number;
+  date: string;
+}> => {
+  try {
+    const ride = {
+      id: Math.random().toString(36).substr(2, 9), // Gerar ID temporário
+      customerId,
+      driverId,
+      distance,
+      date: new Date().toISOString(),
+    };
+
+    // Salvar no banco de dados
+    await db('rides').insert(ride);
+
+    return ride;
+  } catch (error) {
+    throw new Error('Failed to confirm ride.');
   }
 };

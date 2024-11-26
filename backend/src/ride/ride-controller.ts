@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { calculateRideEstimate } from './ride-service';
+import { calculateRideEstimate, confirmRideService } from './ride-service';
 import logger from '../utils/logger';
 
 /**
@@ -33,5 +33,38 @@ export const calculateEstimate = async (
     res.status(500).json({
       error: 'Ocorreu um erro ao calcular a estimativa.',
     });
+  }
+};
+
+export const confirmRide = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const { customerId, driverId, distance } = req.body;
+
+  // Validar dados de entrada
+  if (!customerId || !driverId || !distance) {
+    logger.warn('Missing required fields for ride confirmation', {
+      body: req.body,
+    });
+    res.status(400).json({
+      error: 'Os campos customerId, driverId e distance são obrigatórios.',
+    });
+    return;
+  }
+
+  try {
+    const confirmation = await confirmRideService(
+      customerId,
+      driverId,
+      distance
+    );
+    logger.info('Ride confirmed successfully', { confirmation });
+    res
+      .status(200)
+      .json({ message: 'Viagem confirmada com sucesso.', confirmation });
+  } catch (error) {
+    logger.error('Error confirming ride', { error });
+    res.status(500).json({ error: 'Ocorreu um erro ao confirmar a viagem.' });
   }
 };
