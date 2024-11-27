@@ -8,11 +8,28 @@
     "esModuleInterop": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./types"
+      "src/types/*"
     ],
     "skipLibCheck": true,
     "sourceMap": true,
     "baseUrl": "./",
+    "paths": {
+      "src/*": [
+        "./src/*"
+      ],
+      "controllers/*": [
+        "./src/controllers/*"
+      ],
+      "services/*": [
+        "./src/services/*"
+      ],
+      "routes/*": [
+        "./src/routes/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
+      ]
+    },
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "noUnusedLocals": true,
@@ -22,7 +39,7 @@
   },
   "include": [
     "src/**/*"
-  ],
+, "src/controllers/ride-controller.ts", "src/database.ts", "src/types/ride/IRide.ts", "src/types/index.ts"  ],
   "exclude": [
     "node_modules"
   ]

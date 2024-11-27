@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { RideController } from './ride-controller';
-import { RideService } from './ride-service';
+import { RideController } from 'src/controllers/ride-controller';
+import { RideService } from 'src/services/ride-service';
+
 
 
 const rideService = new RideService()

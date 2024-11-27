@@ -3,12 +3,8 @@ import dotenv from 'dotenv'
 import { routesConf } from './utils/route-utils';
 import { urlPatterns } from './routes';
 import { initializeDatabase } from './database';
-// import logger from './utils/logger';
-
-
 
 dotenv.config()
-
 
 const app: Express = express();
 

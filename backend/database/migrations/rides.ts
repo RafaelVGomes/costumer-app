@@ -9,8 +9,9 @@ export async function up(knex: Knex): Promise<void> {
       table.string('origin').nullable();
       table.string('destination').nullable();
       table.string('driver_id').references('id').inTable('drivers');
+      table.string('driver_name').notNullable();
       table.float('distance').notNullable();
-      table.decimal('price', 10, 2).nullable();
+      table.decimal('value', 10, 2).nullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
     });
   }

@@ -1,5 +1,5 @@
 import { RoutesClient } from '@googlemaps/routing';
-import { RouteApiRequest, RouteApiResponse } from 'src/interfaces';
+import { RouteApiRequest, RouteApiResponse } from 'src/types/interfaces';
 import { secondsToMinutes } from './time-converter';
 
 const routingClient = new RoutesClient();
