@@ -1,73 +1,72 @@
 import { getRoute } from '../utils/google-maps-utils';
 import { db } from '../database';
+import { RouteApiRequest, RouteApiResponse } from 'src/interfaces';
+import { Driver } from './types';
 import logger from '../utils/logger';
 
-/**
- * Service to calculate ride estimate using Google Maps API
- * @param startLocation Object containing latitude and longitude of start point
- * @param endLocation Object containing latitude and longitude of end point
- * @returns Ride estimate with distance, duration, and route polyline
- */
-export const calculateRideEstimate = async (
-  startLocation: { latitude: number; longitude: number },
-  endLocation: { latitude: number; longitude: number }
-): Promise<{ distance: number; duration: string; polyline: string }> => {
-  try {
-    // Build the request object for Google Maps API
-    const request = {
-      origin: {
-        location: {
-          latLng: {
-            latitude: startLocation.latitude,
-            longitude: startLocation.longitude,
-          },
-        },
-      },
-      destination: {
-        location: {
-          latLng: {
-            latitude: endLocation.latitude,
-            longitude: endLocation.longitude,
-          },
-        },
-      },
-    };
-
-    // Await the response from Google Maps API
-    const result = await getRoute(request);
-    logger.info('Route fetched successfully from Google Maps API', { result });
-    return result;
-  } catch (error) {
-    logger.error('Error while fetching route from Google Maps API', { error });
-    throw new Error('Failed to fetch route from Google Maps API.');
+export class RideService {
+  // Método para calcular a estimativa de uma corrida
+  public async calculateRideEstimate(
+    request: RouteApiRequest
+  ): Promise<RouteApiResponse> {
+    try {
+      // Chamar a API do Google Maps
+      const result: RouteApiResponse = await getRoute(request);
+      logger.info('Rota obtida com sucesso da API do Google Maps.', {
+        result,
+      });
+      return result;
+    } catch (error) {
+      logger.error('Erro ao buscar rota da API do Google Maps.', {
+        error,
+      });
+      throw new Error('Falha ao buscar rota da API do Google Maps.');
+    }
   }
-};
 
-export const confirmRideService = async (
-  customerId: string,
-  driverId: string,
-  distance: number
-): Promise<{
-  id: string;
-  customerId: string;
-  driverId: string;
-  distance: number;
-  date: string;
-}> => {
-  try {
-    const ride = {
-      id: Math.random().toString(36).substr(2, 9), // Gerar ID temporário
-      customerId,
-      driverId,
-      distance,
-      date: new Date().toISOString(),
-    };
+  // Método para buscar motoristas disponíveis
+  public async getAvailableDrivers(distance: number): Promise<Driver[]> {
+    try {
+      const drivers: Driver[] = await db('drivers')
+        .select('*')
+        .where('min_distance', '<=', distance)
+        .orderBy('rate_per_km', 'asc');
 
-    // Salvar no banco de dados
-    await db('rides').insert(ride);
-
-    return ride;
-  } catch (error) {
-    throw new Error('Failed to confirm ride.');
+      return drivers;
+    } catch (error) {
+      logger.error('Erro ao buscar motoristas disponíveis.', { error });
+      throw new Error('Erro ao buscar motoristas disponíveis.');
+    }
   }
-};
+
+  // Método para confirmar a corrida
+  public async confirmRideService(
+    customerId: string,
+    driverId: string,
+    distance: number
+  ): Promise<{
+    id: string;
+    customerId: string;
+    driverId: string;
+    distance: number;
+    date: string;
+  }> {
+    try {
+      const ride = {
+        id: Math.random().toString(36).substr(2, 9), // Gerar ID temporário
+        customerId,
+        driverId,
+        distance,
+        date: new Date().toISOString(),
+      };
+
+      // Salvar no banco de dados
+      await db('rides').insert(ride);
+
+      return ride;
+    } catch (error) {
+      logger.error('Erro ao confirmar a corrida.', { error });
+      throw new Error('Falha ao confirmar a corrida.');
+    }
+  }
+}
