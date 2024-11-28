@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
-import { RideService } from '../services/ride-service';
+import { RideService, ServiceError } from '../services/ride-service';
 import { RouteApiRequest, RouteApiResponse } from 'src/types/interfaces';
-import { Driver, RideEstimateRequest, RideEstimateResponse, RideInfo } from '../types/interfaces';
+import {
+  Driver,
+  RideEstimateRequest,
+  RideEstimateResponse,
+  RideInfoRequest,
+  Rides,
+  RidesDetail
+} from 'src/interfaces/IRide';
 import logger from '../utils/logger';
 
 export class RideController {
@@ -14,13 +21,13 @@ export class RideController {
   // Método para calcular a estimativa da corrida
   public async calculateEstimate(req: Request, res: Response): Promise<void> {
     const form_data: RideEstimateRequest = {
-      costumer_id: req.body.costumer_id,
+      customer_id: req.body.customer_id,
       origin: req.body.origin.toLowerCase(),
       destination: req.body.destination.toLowerCase()
     }
     
     // Validar dados de entrada
-    this.rideService.ride_estimate_validation(form_data, res);
+    this.rideService.ride_estimate_validation(form_data);
     
     // Objeto de requisição da API Routes
     const apiReq: RouteApiRequest = {
@@ -51,16 +58,27 @@ export class RideController {
       res.status(200).json({ result });
     } catch (error) {
       logger.error('Erro ao calcular a estimativa da corrida.', { error });
-      res.status(500).json({
-        error: 'Ocorreu um erro ao calcular a estimativa.',
-      });
+
+      // Retornando erros capturados do Service
+      if (error instanceof ServiceError) {
+        res.status(error.statusCode).json({
+          error_code: error.error_code,
+          error_description: error.error_description
+        });
+      } else {
+        res.status(500).json({
+          error_code: 'UNKNOWN_ERROR',
+          error_description:
+            'Erro no servidor ao calcular a estimativa da corrida.',
+        });
+      }
     }
   }
 
   // Método para confirmar a corrida
   public async confirmRide(req: Request, res: Response): Promise<void> {
-    const form_data: RideInfo = {
-      costumer_id: req.body.costumer_id,
+    const form_data: RideInfoRequest = {
+      customer_id: req.body.customer_id,
       origin: req.body.origin.toLowerCase(),
       destination: req.body.destination.toLowerCase(),
       distance: req.body.distance,
@@ -72,18 +90,60 @@ export class RideController {
       value: req.body.value,
     };
 
-    // Valida os dados da confirmação da viagem
-    this.rideService.confirm_ride_validation(form_data, res)
-
     try {
-      // Confirmar a corrida usando o serviço
-      await this.rideService.confirmRideService(form_data);
+      // Valida os dados da confirmação da viagem
+      const validatedData = await this.rideService.confirm_ride_validation(form_data)
 
-      logger.info('Corrida confirmada com sucesso.', { form_data });
+      // Confirmar a corrida usando o serviço
+      await this.rideService.confirm_ride(validatedData);
+
+      logger.info('Corrida confirmada com sucesso.', { validatedData });
       res.status(200).json({ success: true });
     } catch (error) {
       logger.error('Erro ao confirmar a corrida.', { error });
-      res.status(500).json({ erro: error });
+      
+      // Retornando erros capturados do Service
+      if (error instanceof ServiceError) {
+        res.status(error.statusCode).json({
+          error_code: error.error_code,
+          error_description: error.error_description,
+        });
+      } else {
+        res.status(500).json({
+          error_code: 'UNKNOWN_ERROR',
+          error_description: 'Erro no servidor ao confirmar a corrida.',
+        });
+      }
+    }
+  }
+
+  public async get_rides(req: Request, res: Response) {
+    const customer_id = req.params.customer_id
+    const driver_id = req.query.driver_id
+    
+    try {
+      await this.rideService.get_rides_validation(customer_id, driver_id)
+      const obj = await this.rideService.get_rides(customer_id, driver_id)
+      const rides: Rides<RidesDetail> = {
+        customer_id: obj.customer_id,
+        rides: obj.rides,
+      };
+      res.status(200).json(rides);
+    } catch (error) {
+      logger.error('Erro ao consultar corridas.', { error });
+
+      // Retornando erros capturados do Service
+      if (error instanceof ServiceError) {
+        res.status(error.statusCode).json({
+          error_code: error.error_code,
+          error_description: error.error_description,
+        });
+      } else {
+        res.status(500).json({
+          error_code: 'UNKNOWN_ERROR',
+          error_description: 'Erro no servidor ao consultar corridas.',
+        });
+      }
     }
   }
 }

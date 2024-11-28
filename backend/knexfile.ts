@@ -6,9 +6,10 @@ const config: { [key: string]: Knex.Config } = {
     connection: {
       filename: './database.sqlite',
     },
+    debug: true,
     useNullAsDefault: true,
     migrations: {
-      directory: './migrations',
+      directory: './database/migrations',
     },
   },
   staging: {

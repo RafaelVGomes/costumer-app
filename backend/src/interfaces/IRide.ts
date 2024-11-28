@@ -4,23 +4,35 @@ export interface DriverCheckInfo {
   id: number;
   name: string;
   min_distance: number;
+  rate_per_km: number;
 }
 
-export interface RideInfo {
-  costumer_id: string;
+export interface RideInfoRequest {
+  customer_id: string;
   origin: string;
   destination: string;
   distance: number;
   duration: string;
   driver: {
     id: number;
-    name: string
+    name: string;
   };
   value: number;
 }
 
+export interface RideInfoResponse {
+  customer_id: string;
+  origin: string;
+  destination: string;
+  distance: number;
+  duration: string;
+  driver_id: number;
+  driver_name: string;
+  value: number;
+}
+
 export interface RideEstimateRequest {
-  costumer_id: string;
+  customer_id: string;
   origin: string;
   destination: string;
 }
@@ -39,4 +51,23 @@ export interface Driver {
     comment: string;
   };
   value: string;
+}
+
+export interface Rides<RidesDetail> {
+  customer_id: string,
+  rides: RidesDetail[]
+}
+
+export interface RidesDetail {
+  id: string;
+  date: Date
+  origin: string;
+  destination: string;
+  distance: number;
+  duration: string;
+  driver: {
+    id: number;
+    name: string;
+  };
+  value: number;
 }

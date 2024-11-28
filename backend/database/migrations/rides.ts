@@ -6,12 +6,13 @@ export async function up(knex: Knex): Promise<void> {
     await knex.schema.createTable('rides', (table) => {
       table.increments('id').primary();
       table.string('customer_id').notNullable();
-      table.string('origin').nullable();
-      table.string('destination').nullable();
+      table.string('origin').notNullable();
+      table.string('destination').notNullable();
       table.string('driver_id').references('id').inTable('drivers');
       table.string('driver_name').notNullable();
-      table.float('distance').notNullable();
-      table.decimal('value', 10, 2).nullable();
+      table.integer('distance').notNullable();
+      table.string('duration').notNullable();
+      table.float('value', 10, 2).notNullable();
       table.timestamp('created_at').defaultTo(knex.fn.now());
     });
   }

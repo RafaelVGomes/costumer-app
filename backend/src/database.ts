@@ -23,7 +23,10 @@ async function initializeDatabase(): Promise<void> {
 
       console.log('Criando tabelas...');
       execSync('npx knex migrate:up drivers.ts', { encoding: 'utf-8', });
+      console.log('Tabela drivers criada...');
       execSync('npx knex migrate:up rides.ts', { encoding: 'utf-8' });
+      console.log('Tabela rides criada...');
+      console.log('Banco de dados criado.');
     }
   } catch (error) {
     console.log('BD Error:', error);
